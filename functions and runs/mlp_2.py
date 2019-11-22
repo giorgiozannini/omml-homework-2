@@ -1,13 +1,8 @@
 # file imports
 from sklearn.model_selection import train_test_split
-import pandas as pd
 import numpy as np
 from scipy.optimize import minimize as minimize
 import time
-import random
-from tqdm import tqdm_notebook
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 # splitting data in train test and val set
 def data_split(data, val = True):
@@ -26,13 +21,10 @@ def data_split(data, val = True):
         X_test, X_val, y_test, y_val = train_test_split(X_val, y_val, test_size=0.5, random_state=1)
         return X_train.T, X_test.T, X_val.T, y_train, y_test, y_val
 
-
-data = pd.read_excel(r'C:\Users\RE-Giorgio\Downloads\dataPoints.xlsx')
-random.seed(1696995)
-X_train, X_test, X_val, y_train, y_test, y_val = data_split(data)
-
-class ShallowNeuralNetwork:
+      
+class Mlp_el():
     
+      
     # defines the variables for a shallow nn with scalar output
     def __init__(self, X, y, N, sigma, rho, method = None, seed = 1):
         
@@ -66,9 +58,6 @@ class ShallowNeuralNetwork:
     # metric for train and test accuracy
     def mse(self, X, y, w, b, v):
         return 0.5 * np.mean(np.square(self.predict(X, w, b, v) - y)) 
-    
-class Mlp_el(ShallowNeuralNetwork):
-
     # activation function (hyperbolic tangent)
     def g(self, x):
         return (1-np.exp(-2*x*self.sigma))/(1+np.exp(-2*x*self.sigma))
@@ -76,8 +65,9 @@ class Mlp_el(ShallowNeuralNetwork):
     def grad(self, v):
         
         z = self.w @ self.X - self.b
-        f_x = self.predict(self.X, self.w, self.b, v)
-        dv = 2*self.rho*v + (1/self.X.shape[1]) * (f_x-y_train).dot(self.g(z).T)
+        a = self.g(z)
+        
+        dv = 2*self.rho*v + (1/self.X.shape[1]) * (v@a -self.y) @ a.T
         return dv
         
     # forward propagation
@@ -85,8 +75,7 @@ class Mlp_el(ShallowNeuralNetwork):
         
         z = w @ x - b
         a = self.g(z)
-        self.output = v @ a
-        return self.output
+        return v @ a
     
     def optimize(self):
         
@@ -98,28 +87,3 @@ class Mlp_el(ShallowNeuralNetwork):
         self.v = result.x
         
         return result.nfev, result.njev, result.nit, result.fun, result.jac, time_elapsed
-
-def plot(nn):
-    
-    # creates 3d space
-    fig = plt.figure(figsize = [20,10])
-    ax = Axes3D(fig)
-    
-    # grid of the support of the estimated function
-    x1 = np.linspace(-2, 2, 200)
-    x2 = np.linspace(-1, 1, 200)
-    X2, X1 = np.meshgrid(x1, x2)
-    
-    # predictions on the given support
-    Y = np.array([nn.predict(np.array([x1[i], x2[k]]).reshape(2,1),
-                             nn.w, nn.b, nn.v) for i in range(200) for k in range(200)])
-    Y = Y.ravel().reshape(200,200)
-    
-    # plotting
-    ax.plot_surface(X1, X2, Y, rstride=1, cstride=1,cmap='viridis', edgecolor='none')
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
-    ax.set_zlabel('z')
-    ax.view_init(30, 60)
-    plt.show()
-
