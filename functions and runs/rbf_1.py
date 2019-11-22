@@ -5,7 +5,6 @@ from scipy.optimize import minimize as minimize
 import time
 import random
 
-
 # splitting data in train test and val set
 def data_split(data, val = True):
     
@@ -16,14 +15,9 @@ def data_split(data, val = True):
     # train-val split 100% -> 70% - 30%
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.3, random_state=1) 
     
-    if val == False:
-        return X_train.T, X_val.T, y_train, y_val
-    
-    else:
     # val-test split 30% -> 15% - 15%
-        X_test, X_val, y_test, y_val = train_test_split(X_val, y_val, test_size=0.5, random_state=1)
-        return X_train.T, X_test.T, X_val.T, y_train, y_test, y_val
-
+    X_test, X_val, y_test, y_val = train_test_split(X_val, y_val, test_size=0.5, random_state=1)
+    return X_train.T, X_test.T, X_val.T, y_train, y_test, y_val
 
 # Mlp inherits the general charectiristics of a shallow nn 
 class Rbf():
@@ -32,6 +26,7 @@ class Rbf():
     # defines the variables for a shallow nn with scalar output
     def __init__(self, X, y, N, sigma, rho, method = None):
 
+        
         self.X = X
         self.y = y
         self.N = N

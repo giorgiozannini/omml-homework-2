@@ -13,5 +13,5 @@ nfev, njev, nit, fun, jac, time_elapsed = nn.optimize()
 
 print("N :", N, "\nsigma :", sigma, "\nrho :", rho)
 print("# of fun eval :", nfev, "\n# of grad eval :" , njev, "\ntime elapsed :", time_elapsed)
-print("training Error :", nn.mse(X_train, y_train, nn.c, nn.v))
-print("test Error :", nn.mse(X_test, y_test, nn.c, nn.v))
+print("training error :", nn.mse(X_train, y_train, nn.c, nn.v))
+print("test error :", nn.mse(X_test, y_test, nn.c, nn.v))

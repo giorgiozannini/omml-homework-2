@@ -2,31 +2,24 @@
 from sklearn.model_selection import train_test_split
 import numpy as np
 from scipy.optimize import minimize as minimize
-import time
-import random
-
 # splitting data in train test and val set
 def data_split(data, val = True):
     
-    random.seed(1696995)
     X = np.array(data.iloc[:,:2])
     y = np.array(data.iloc[:, 2])
     
     # train-val split 100% -> 70% - 30%
-    X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.3, random_state=1) 
-    
-    # val-test split 30% -> 15% - 15%
-    X_test, X_val, y_test, y_val = train_test_split(X_val, y_val, test_size=0.5, random_state=1)
-    return X_train.T, X_test.T, X_val.T, y_train, y_test, y_val
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+    return X_train.T, X_test.T, y_train, y_test
         
 # Mlp inherits the general charectiristics of a shallow nn 
 class Mlp():
     
     
+    
     # defines the variables for a shallow nn with scalar output
     def __init__(self, X, y, N, sigma, rho, method = None, seed = 1):
 
-        
         self.X = X
         self.y = y
         self.N = N
@@ -92,12 +85,18 @@ class Mlp():
     def optimize(self):
         
         inits = np.concatenate([array.reshape(-1) for array in [self.w, self.b, self.v]])
-    
-        start = time.time()
         result =  minimize(self.loss, x0 = inits, method = self.method, jac = self.grad)
-        time_elapsed = time.time() - start
         
         # optimal parameters
         self.w, self.b, self.v = self.separate(result.x)
         
-        return result.nfev, result.njev, result.nit, result.fun, result.jac, time_elapsed
+def test_split(data):
+        
+    X = np.array(data.iloc[:,:2])
+    y = np.array(data.iloc[:, 2])
+    
+    return X.T, y
+    
+def test_mse(y_pred, y_test):
+    return 0.5 * np.mean(np.square(y_pred - y_test)) 
+        

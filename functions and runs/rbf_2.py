@@ -8,23 +8,16 @@ import random
 # splitting data in train test and val set
 def data_split(data, val = True):
     
-    random.seed(1696991)
+    random.seed(1696995)
     X = np.array(data.iloc[:,:2])
     y = np.array(data.iloc[:, 2])
     
     # train-val split 100% -> 70% - 30%
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.3, random_state=1) 
-    
-    if val == False:
-        return X_train.T, X_val.T, y_train, y_val
-    
-    else:
+
     # val-test split 30% -> 15% - 15%
-        X_test, X_val, y_test, y_val = train_test_split(X_val, y_val, test_size=0.5, random_state=1)
-        return X_train.T, X_test.T, X_val.T, y_train, y_test, y_val    
-    
-    
-    
+    X_test, X_val, y_test, y_val = train_test_split(X_val, y_val, test_size=0.5, random_state=1)
+    return X_train.T, X_test.T, X_val.T, y_train, y_test, y_val       
 
 # Mlp inherits the general charectiristics of a shallow nn 
 class Rbf_el():
@@ -33,7 +26,6 @@ class Rbf_el():
     # defines the variables for a shallow nn with scalar output
     def __init__(self, X, y, N, sigma, rho, method = None, seed = 1):
         
-
 
         self.X = X
         self.y = y
@@ -92,3 +84,25 @@ class Rbf_el():
         self.v = result.x
         
         return result.nfev, result.njev, result.nit, result.fun, result.jac, time_elapsed
+    
+    
+"""
+
+This is to manually find the seed 
+
+import tqdm
+def find_seed(N, sigma, rho, method):
+    
+    num_it = 1000
+    test_mses = {}
+    for i in tqdm(range(num_it)):
+
+        s = np.random.randint(1000000000)
+        nn = Mlp_el(X_train, y_train, N = N, sigma = sigma, rho = rho, method = method,seed = s)
+        nn.optimize()
+
+        test_mses[s] = nn.mse(X_test, y_test, nn.w,nn.b, nn.v)
+
+    opt_seed = min(test_mses, key=test_mses.get)
+    return opt_seed
+"""
