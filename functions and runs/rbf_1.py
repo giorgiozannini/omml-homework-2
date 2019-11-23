@@ -97,5 +97,5 @@ class Rbf():
         # optimal parameters
         self.c, self.v = self.separate(result.x)
         
-        return result.nfev, result.njev, result.nit, result.fun, result.jac, time_elapsed
+        return result.nfev, result.njev, time_elapsed
 

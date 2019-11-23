@@ -84,7 +84,7 @@ class Mlp_el():
         
         self.v = result.x
         
-        return result.nfev, result.njev, result.nit, result.fun, result.jac, time_elapsed
+        return result.nfev, result.njev, time_elapsed
     
     
     

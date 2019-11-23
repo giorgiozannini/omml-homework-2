@@ -9,7 +9,7 @@ X_train, X_test, X_val, y_train, y_test, y_val  = f.data_split(data)
 N = 35; sigma = 8; rho = 1e-5; method = "BFGS"; seed = 630940773
 
 nn = f.Mlp_el(X_train, y_train, N = N, sigma = sigma, rho = rho, method = method)
-nfev, njev, nit, fun, jac, time_elapsed = nn.optimize()
+nfev, njev, time_elapsed = nn.optimize()
 
 print("N :", N, "\nsigma :", sigma, "\nrho :", rho, "\nseed :", seed)
 print("# of fun eval :", nfev, "\n# of grad eval :" , njev, "\ntime elapsed :", time_elapsed)
