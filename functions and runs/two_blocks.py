@@ -66,7 +66,7 @@ class two_blocks:
     def g_der(self, x):
         return (4*self.sigma*np.exp(2*self.sigma*x))/np.square(np.exp(2*self.sigma*x)+1)
 
-    
+    # gradient wrt v
     def grad_v(self, params):
 
         w, b, v = self.w,self.b,params
@@ -76,7 +76,7 @@ class two_blocks:
         self.dv = 2*self.rho*v + (1/self.X.shape[1]) * (v@a - self.y) @ a.T
         return self.dv.reshape(-1)
 
-    
+    # gradient wrt w and b
     def grad_w_b(self, params):
         
         w, b = self.separate_w_b(params)
@@ -97,12 +97,13 @@ class two_blocks:
         w, b = [np.array(sliced[i]).reshape(shapes[i]) for i in range(2)]
         return w, b
     
+    # loss wrt v
     def loss_v(self, v):
         
         return 0.5 * np.mean(np.square((self.predict(self.X, self.w, self.b, v) - self.y))) +\
         self.rho*np.square(np.linalg.norm(np.concatenate([array.reshape(-1) for array in [self.w, self.b, v]])))
     
-    
+    # loss wrt w and b
     def loss_w_b(self,wb):
         
         w,b = self.separate_w_b(wb)
@@ -123,6 +124,7 @@ class two_blocks:
         start = time.time()
         results = {"nfev" : [[], []], "njev" : [[],[]]}
         
+        # stopping condition:  gradient rule + early stopping or max iter reached
         while  i < 50 :
             
             # block 1

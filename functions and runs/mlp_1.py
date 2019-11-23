@@ -19,7 +19,7 @@ def data_split(data, val = True):
     X_test, X_val, y_test, y_val = train_test_split(X_val, y_val, test_size=0.5, random_state=1)
     return X_train.T, X_test.T, X_val.T, y_train, y_test, y_val
         
-# Mlp inherits the general charectiristics of a shallow nn 
+
 class Mlp():
     
     
@@ -80,7 +80,7 @@ class Mlp():
         z = w @ self.X - b
         a = self.g(z)
         
-        dw = 2*self.rho*w + (1/self.X.shape[1]) * ((v.T @ (v@a-self.y)) * self.g_der(z)) @ self.X.T
+        dw = 2*self.rho*w + (1/self.X.shape[1]) * ((v.T @ (v@a - self.y)) * self.g_der(z)) @ self.X.T
         db = 2*self.rho*b + ((v.T @ (v@a - self.y)) * self.g_der(z)) * -1
         db = np.mean(db, axis = 1)
         dv = 2*self.rho*v + (1/self.X.shape[1]) * (v@a - self.y) @ self.g(z).T

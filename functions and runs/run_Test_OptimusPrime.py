@@ -6,9 +6,9 @@ data = pd.read_excel('dataPoints.xlsx')
 X_train, X_test, y_train, y_test = f.data_split(data)
 
 # running the optimizer
-N = 35; sigma = 8; rho = 1e-5; method = "BFGS";
+N = 128; sigma = 6.5; rho = 1e-5; method = "BFGS";
 
-nn = f.Mlp(X_train, y_train, N = N, sigma = sigma, rho = rho, method = method)
+nn = f.two_blocks(X_train, y_train,X_test, y_test, N = N, sigma = sigma, rho = rho, method = method)
 nn.optimize()
 
 data = pd.read_excel('dataPointsTest.xlsx.')
