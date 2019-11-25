@@ -16,3 +16,4 @@ print("N :", N, "\nsigma :", sigma, "\nrho :", rho, "\nseed :", seed, "\nmethod 
 print("# of fun eval :", nfev, "\n# of grad eval :" , njev, "\ntime elapsed :", time_elapsed)
 print("training error :", nn.mse(X_train, y_train, nn.c, nn.v))
 print("test error :", nn.mse(X_test, y_test, nn.c, nn.v))
+f.plot(nn)

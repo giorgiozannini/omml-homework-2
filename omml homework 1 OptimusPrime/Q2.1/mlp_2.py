@@ -4,6 +4,8 @@ import numpy as np
 from scipy.optimize import minimize as minimize
 import time
 import random
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 # splitting data in train test and val set
 def data_split(data, val = True):
@@ -86,7 +88,29 @@ class Mlp_el():
         return result.nfev, result.njev, time_elapsed
     
     
+def plot(nn):
     
+    # creates 3d space
+    fig = plt.figure(figsize = [20,10])
+    ax = Axes3D(fig)
+    
+    # grid of the support of the estimated function
+    x1 = np.linspace(-2, 2, 200)
+    x2 = np.linspace(-1, 1, 200)
+    X2, X1 = np.meshgrid(x1, x2)
+    
+    # predictions on the given support
+    Y = np.array([nn.predict(np.array([x1[i], x2[k]]).reshape(2,1),
+                             nn.w, nn.b, nn.v) for i in range(200) for k in range(200)])
+    Y = Y.ravel().reshape(200,200)
+    
+    # plotting
+    ax.plot_surface(X1, X2, Y, rstride=1, cstride=1,cmap='viridis', edgecolor='none')
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+    ax.view_init(30, 60)
+    plt.show()    
 """
 #This is to manually find the seed 
 
