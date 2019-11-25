@@ -11,7 +11,7 @@ N = 128; sigma = 6.5; rho = 1e-5; method = "BFGS";
 nn = f.two_blocks(X_train, y_train,X_test, y_test, N = N, sigma = sigma, rho = rho, method = method)
 nn.optimize()
 
-data = pd.read_excel('dataPointsTest.xlsx.')
+data = pd.read_excel('../dataPointsTest.xlsx.')
 X_newtest, y_newtest = f.test_split(data)
 y_pred = nn.predict(X_newtest, nn.w, nn.b, nn.v)
 
