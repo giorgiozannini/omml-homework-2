@@ -68,7 +68,7 @@ class Svm:
         return np.exp(-self.gamma*(np.sum(X1**2, axis = 1).reshape(-1,1) + np.sum(X2**2, axis = 1) - 2*np.dot(X1,X2.T)))
         
     def kernel_poly(self, X1, X2):
-        return (X1 @ X2.T - 1)**self.gamma
+        return (X1 @ X2.T + 1)**self.gamma
     
     def compute_m_M(self, H, y):
         
@@ -107,7 +107,7 @@ class Svm:
         A = matrix(y.reshape(1, -1))
         b = matrix(np.zeros(1))
                     
-        #solvers.options['abstol'] = 1e-13
+        solvers.options['abstol'] = 1e-13
         solvers.options['feastol'] = 1e-15
         solvers.options['show_progress'] = False
         
@@ -127,7 +127,7 @@ class Svm:
         
         diff = self.compute_m_M(H, y)
         
-        return res["iterations"], time_elapsed, diff
+        return res["iterations"], time_elapsed, diff,res['dual objective']
 
 def confusion_matrix(y_true, y_pred):
 

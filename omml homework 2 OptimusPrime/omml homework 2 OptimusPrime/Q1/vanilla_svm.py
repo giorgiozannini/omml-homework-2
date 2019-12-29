@@ -78,8 +78,10 @@ class Svm:
         return np.exp(-self.gamma*(np.sum(X1**2, axis = 1).reshape(-1,1) + np.sum(X2**2, axis = 1) - 2*np.dot(X1,X2.T)))
         
     def kernel_poly(self, X1, X2):
-        return (X1 @ X2.T - 1)**self.gamma
+        return (X1 @ X2.T + 1)**self.gamma
     
+   
+
     def compute_m_M(self, H, y):
         
         y = y.ravel(); C = self.C; alpha = self.alpha.ravel() 
@@ -96,7 +98,7 @@ class Svm:
         
     def fit(self, X, y):
         
-        self.alpha = np.zeros((1,X.shape[0]))#.reshape(1,X.shape[0])
+        self.alpha = np.zeros((1,X.shape[0]))
         self.y = y
         self.X = X
         
@@ -117,7 +119,7 @@ class Svm:
         A = matrix(y.reshape(1, -1))
         b = matrix(np.zeros(1))
                     
-        #solvers.options['abstol'] = 1e-13
+        solvers.options['abstol'] = 1e-13
         solvers.options['feastol'] = 1e-15
         solvers.options['show_progress'] = False
         

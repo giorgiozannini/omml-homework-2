@@ -34,7 +34,8 @@ for i in range(len(labels)):
     comb = hyperparameters[i]
     
     svm = f.Svm(gamma = comb[0], C = comb[1], kernel = comb[2])
-    its, time_elapsed, diff = svm.fit(X_train, y_train)
+    its, time_elapsed, diff, objective = svm.fit(X_train, y_train)
+    
     iterations += its
     running_time += time_elapsed
     
@@ -75,3 +76,5 @@ print("- confusion matrix :\n",f.confusion_matrix(y_all_test, votes_test))
 print("- time elapsed :", running_time)
 print("- iterations :", iterations)
 print("- m - M :", diff)
+
+

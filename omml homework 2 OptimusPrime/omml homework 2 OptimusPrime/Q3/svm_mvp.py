@@ -1,10 +1,7 @@
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
-from cvxopt import matrix 
-from cvxopt import solvers
 import time
-from copy import copy
 
 def data_split(path):
 	
@@ -79,7 +76,7 @@ class Svm_mvp:
         return np.exp(-self.gamma*(np.sum(X1**2, axis = 1).reshape(-1,1) + np.sum(X2**2, axis = 1) - 2*np.dot(X1,X2.T)))
         
     def kernel_poly(self, X1, X2):
-        return (X1 @ X2.T - 1)**self.gamma
+        return (X1 @ X2.T + 1)**self.gamma
 
     def get_working_set(self,K):
         
@@ -138,6 +135,9 @@ class Svm_mvp:
         
         return beta_bar
         
+    def objective(self,H):
+        return (0.5*self.alpha @ H @ self.alpha.T) - ( np.sum(self.alpha))
+    
     def fit(self, X, y):
         
         self.y = y
@@ -189,7 +189,7 @@ class Svm_mvp:
             
         time_elapsed = time.time() - start
         
-        return i, time_elapsed, self.diff
+        return i, time_elapsed, self.diff, self.objective(np.outer(y,y)*K)
 
 
 def confusion_matrix(y_true, y_pred):

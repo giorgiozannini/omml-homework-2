@@ -81,7 +81,7 @@ class Svm_dcmp:
         return np.exp(-self.gamma*(np.sum(X1**2, axis = 1).reshape(-1,1) + np.sum(X2**2, axis = 1) - 2*np.dot(X1,X2.T)))
         
     def kernel_poly(self, X1, X2):
-        return (X1 @ X2.T - 1)**self.gamma
+        return (X1 @ X2.T + 1)**self.gamma
 
     def get_working_set(self, alpha, K):
         
@@ -119,7 +119,10 @@ class Svm_dcmp:
             self.diff = m-M
             
         return W, W_, Q, flag 
-    
+
+    def objective(self,H):
+        return (0.5*self.alpha @ H @ self.alpha.T) - ( np.sum(self.alpha))
+
     def fit(self, X, y):
         
         self.y = y
@@ -153,7 +156,7 @@ class Svm_dcmp:
             A = matrix(y[W].reshape(1, -1))
             b = matrix(- y[W_].T @ old_alpha[W_])
             
-            solvers.options['abstol'] = 1e-15
+            solvers.options['abstol'] = 1e-14
             solvers.options['feastol'] = 1e-15
             solvers.options['show_progress'] = False 
             
@@ -177,7 +180,7 @@ class Svm_dcmp:
         b = y[idx] - wx.T
         self.b = np.mean(b)
         
-        return  its, time_elapsed, self.diff  
+        return  its, time_elapsed, self.diff, self.objective(H)  
         
 def confusion_matrix(y_true, y_pred):
 
