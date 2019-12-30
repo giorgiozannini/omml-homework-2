@@ -18,6 +18,7 @@ votes_test = []
 
 iterations = 0
 running_time = 0
+diffs = []
 for i in range(len(labels)):
     
     permutations_y[i][0][:] = +1
@@ -56,7 +57,7 @@ for i in range(len(labels)):
     y_test[y_test == 1] = labels[i][0]
     y_test[y_test == -1] = labels[i][1]
     y_all_test.append(y_test)
-
+    diffs.append(diff)
 # predicted labels
 votes_train = np.array(votes_train).reshape(-1,1)
 votes_test = np.array(votes_test).reshape(-1,1)
@@ -75,6 +76,8 @@ print("- accuracy on test :",np.mean(votes_test == y_all_test))
 print("- confusion matrix :\n",f.confusion_matrix(y_all_test, votes_test))
 print("- time elapsed :", running_time)
 print("- iterations :", iterations)
-print("- m - M :", diff)
-
+#print("- m - M :", diff)
+print("- m - M Kernel_1: ",diffs[0])
+print("- m - M Kernel_2: ",diffs[1])
+print("- m - M Kernel_3: ",diffs[2])
 
